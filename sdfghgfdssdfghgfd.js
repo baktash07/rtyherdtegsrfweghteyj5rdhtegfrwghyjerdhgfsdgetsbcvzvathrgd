@@ -27,7 +27,47 @@ var prefix = "$"
 
 
 
+client.on('message',async message => {
+if(message.author.bot) return;
+if(message.channel.type === 'dm') return
+  let ms = require('ms');
+  let args = message.content.split(' ');
+  let mention = message.mentions.users.first();
+  let m = message.content.split(' ').slice(2);
+  let duration = args[2];
+  let reason = args.slice(3).join(' ');
+  let mute = message.guild.roles.find('name', 'Muted') || message.guild.roles.find(r => r.name === 'Muted');
+  if(message.content.startsWith(prefix + "mute")) {
+    if(message.content.split(' ')[0] !== `${prefix}mute`) return;
+    try {
+      if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send(`**:milky_way:| ${message.author.username}, أنت لا تملك الخصائص الكافية**`);
+    if(!message.guild.member(client.user).hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) return message.channel.send(`**:milky_way:| ${client.user.username}, أنا لا املك الخصائص الكافية**`);
+    if(!mute) message.guild.createRole({name: 'Muted', permissions: 0}).then(r => message.guild.channels.filter(r => r.type === 'text').forEach(a => a.overwritePermisions(r, {SEND_MESSAGES: false, ADD_REACTIONS: false})));
+    if(!mention) return message.channel.send(`**:milky_way:| ${message.author.username}, يجب عليك منشنة شخص**`);
+    if(!duration) return message.channel.send(`**:milky_way:| ${message.author.username}, يجب عليك تحديد وقت زمني . \`مثال : -mute @iAmYouseFx 1h مزعج\`**`);
+    if(!args[2].match(/[1-7][s,m,h,d,w]/)) return message.channel.send(`**:milky_way:| حدد وقت زمني صحيح . \`مثال : -mute @iAmYouseFx 1h مزعج\`**`);
+    if(!reason) reason =  'غير محدد';
+      let time;
+  time = duration.replace('w', ' اسبوع');
+  time = duration.replace('d', ' يوم');
+  time = duration.replace('h', ' ساعة');
+  time = duration.replace('m', ' دقيقة');
+  time = duration.replace('s', ' ثانية');
 
+    message.guild.member(mention).addRole(mute);
+    message.guild.member(mention).setMute(true);
+    message.channel.send(`**:white_check_mark:| ${mention.username}, لقد تم اعطائك ميوت**`);
+    setTimeout(() => {
+      message.guild.member(mention).removeRole(mute).catch(console.error);
+      message.guild.member(mention).setMute(false).catch(console.error);
+      message.channel.send(`**:white_check_mark:| ${mention.username}, تم فك الميوت عن العضو**`);
+    }, ms(duration));
+    } catch(e) {
+      if(e) console.error(e);
+    }
+  }
+});
+   
 const sWlc = {}
 const premium = ['463857132060540958']
 client.on('message', message => {
