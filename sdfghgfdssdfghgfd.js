@@ -1818,4 +1818,14 @@ const w = ['./m.png'];
 });
 
 
+
+
+
+
+
+
+
+egrhbntmyjrnhtbgfvdcfvbgtryhnjuynhtbgfvd
+ bnhdfvhjmyjrtnhbgfc
+
 client.login(process.env.BOT_TOKEN);
